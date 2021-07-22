@@ -1,0 +1,1 @@
+GET http://localhost:3000/doctors?last_name=gray&address1=1500%20Owens%20St
