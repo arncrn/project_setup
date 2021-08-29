@@ -7,7 +7,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(middleware.requestLogger);
 
 app.get('/', (req, res) => {
-  res.send('<h1>Hello World</h1>');
+  res.send('<h1>Hello World!</h1>');
 });
 
 app.use(middleware.unknownEndpoint);
