@@ -25,7 +25,7 @@ app.get("/inventory/:item", async (req, res) => {
 
   const body = {
     ...inventoryItem,
-    info: `The API returned ${parsed.length} recipies`,
+    info: `The API returned ${parsed.length} recipes`,
   };
 
   res.send(body);

@@ -22,22 +22,23 @@ describe("fetch inventory items and access API", () => {
 
     expect(response.body).toEqual({
       ...eggs,
-      info: `The API returned ${parsed.length} recipies`,
+      info: `The API returned ${parsed.length} recipes`,
     });
 
     // hard coded for demonstration to show the number of recipies comes from API
-    expect(response.body.info).toEqual(`The API returned 9 recipies`)
+    expect(response.body.info).toEqual(`The API returned 9 recipes`)
   });
 });
 
 // uses nock, does not make request to API
 describe("fetch inventory items with Nock for API", () => {
+  // ensures nock interceptor's array is empty 
   beforeEach(() => {
     nock.cleanAll();
   });
 
   // this shows that nock interceptor's array is empty, otherwise it will throw an error
-  // because then the request didn't actually go through nock correctly
+  // because then the request didn't actually go through the nock endpoint correctly
   afterEach(() => {
     if (!nock.isDone()) {
       throw new Error("Not all mocked endpoints received requests.");
@@ -45,7 +46,7 @@ describe("fetch inventory items with Nock for API", () => {
   });
 
   test("can fetch an item from the inventory using Nock for API", async () => {
-    const eggsResponse = ['omelet', 'eggs benedict'];
+    const fakeEggsResponse = ['omelet', 'eggs benedict'];
 
     const eggs = {
       itemName: "eggs",
@@ -54,20 +55,25 @@ describe("fetch inventory items with Nock for API", () => {
 
     nock("https://d1.supercook.com")
       .get("/dyn/dautoc?term=eggs&lang=en")
-      .reply(200, eggsResponse);
+      .reply(200, fakeEggsResponse);
+
+    // if we do not make a request to our nock endpoint, we will throw an error
+    // const responseToHome = await request(app)
+    //   .get('/')
+    //   .expect(200)
 
     // nock will prevent this from actually being requested
     const response = await request(app)
       .get('/inventory/eggs')
       .expect(200);
 
-    // here the eggsResponse array is used in place of the data returned from the API
+    // here the fakeEggsResponse array is used in place of the data returned from the API
     expect(response.body).toEqual({
       ...eggs,
-      info: `The API returned ${eggsResponse.length} recipies`
+      info: `The API returned ${fakeEggsResponse.length} recipes`
     });
 
     // hard coded for demonstration purposes to show the recipies come from eggsResponse and not API
-    expect(response.body.info).toEqual(`The API returned 2 recipies`);
+    expect(response.body.info).toEqual(`The API returned 2 recipes`);
   });
 });
