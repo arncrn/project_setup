@@ -2,6 +2,7 @@ const middleware = require("./lib/middleware");
 const express = require("express");
 const app = express();
 const fetch = require("isomorphic-fetch");
+const nock = require("nock");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -17,14 +18,14 @@ app.get("/", (req, res) => {
 
 app.get("/inventory/:item", async (req, res) => {
   const { item } = req.params;
-  const response = await fetch(`http://www.recipepuppy.com/api/?i=${item}`);
-  const { title, href, results: recipes } = response;
+  const APIResponse = await fetch(`https://d1.supercook.com/dyn/dautoc?term=${item}&lang=en`);
+  const parsed = await APIResponse.json();
+
   const inventoryItem = { itemName: "eggs", quantity: 3 }; // hard coding db result
 
   const body = {
     ...inventoryItem,
-    info: `Data obtained from ${title} - ${href}`,
-    recipes,
+    info: `The API returned ${parsed.length} recipies`,
   };
 
   res.send(body);
